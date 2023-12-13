@@ -1,0 +1,40 @@
+# Create a GitHub action to email a report from a file at 6 a.m. daily
+# This is a scheduled workflow that runs at 6 a.m. UTC daily
+# You can schedule a workflow to run at specific UTC times using POSIX cron syntax.
+# For more information, see "Events that trigger workflows."
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events
+name: Email report at 6 a.m. daily
+on:
+  schedule:
+    - cron: '0 6 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Email report
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 'Daily report'
+          body: |
+            Hi,
+
+            Here is your daily report.
+
+            Best regards,
+
+            Your bot
+          from: ${{ secrets.MAIL_FROM }}
+          to: ${{ secrets.MAIL_TO }}
+          content_type: text/plain
+          attachments: |
+            ./report.txt
+```
+
+## License
+
+[MIT](LICENSE)
